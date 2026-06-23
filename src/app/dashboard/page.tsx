@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Upload, Edit3, Save, X, Calendar, User, Search, Shield, Users, Lock, Trash2, MessageSquare, ShieldAlert, Star } from "lucide-react";
+import { LogOut, Upload, Edit3, Save, X, Calendar, User, Search, Shield, Users, Lock, Trash2, MessageSquare, ShieldAlert, Star, ShieldCheck } from "lucide-react";
 
 const SkinHead = ({ skinUrl }: { skinUrl: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
