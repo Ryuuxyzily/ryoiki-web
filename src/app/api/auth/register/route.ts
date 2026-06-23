@@ -2,12 +2,27 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
+import { isRateLimited } from '@/lib/rateLimit';
+import disposableDomains from 'disposable-email-domains';
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
+    
+    // Rate limit: Max 5 registration attempts per 10 minutes
+    if (isRateLimited(`register_${ip}`, 5, 10 * 60 * 1000)) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    }
+
     const { email, username, password } = await req.json();
     if (!email || !username || !password) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    }
+
+    // Temp-Mail Checker
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (disposableDomains.includes(domain)) {
+      return NextResponse.json({ error: 'Temporary or disposable emails are not allowed.' }, { status: 403 });
     }
 
     // Check if user exists
