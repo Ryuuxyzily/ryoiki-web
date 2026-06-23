@@ -13,9 +13,12 @@ export async function POST(req: Request) {
     const decoded = jwt.verify(token, JWT_SECRET) as { uuid: string };
     const adminUuid = decoded.uuid;
 
-    // Verify Admin Email
+    // Verify Admin/Mod Access
     const callerDoc = await db.collection('users').doc(adminUuid).get();
-    if (!callerDoc.exists || callerDoc.data()!.email !== 'chiragrathoreyu@gmail.com') {
+    if (!callerDoc.exists) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    
+    const callerRole = callerDoc.data()!.role;
+    if (callerRole !== 'Founder' && callerRole !== 'Mod') {
       return NextResponse.json({ error: 'Forbidden. Admin access required.' }, { status: 403 });
     }
 
@@ -36,6 +39,17 @@ export async function POST(req: Request) {
     }
 
     const targetData = targetDoc.data()!;
+    const targetRole = targetData.role || 'User';
+
+    // Permission Safety Checks
+    if (callerRole === 'Mod') {
+      if (targetRole === 'Founder' || targetRole === 'Mod') {
+        return NextResponse.json({ error: 'Moderators cannot modify other staff members' }, { status: 403 });
+      }
+      if (action === 'TOGGLE_MOD' || action === 'DELETE') {
+        return NextResponse.json({ error: 'Moderators do not have permission to use this action' }, { status: 403 });
+      }
+    }
 
     if (action === 'TOGGLE_BAN') {
       await targetRef.update({ isBanned: !targetData.isBanned });
@@ -43,8 +57,13 @@ export async function POST(req: Request) {
     }
 
     if (action === 'TOGGLE_VIP') {
-      const currentRole = targetData.role || 'User';
-      const newRole = currentRole === 'VIP' ? 'User' : 'VIP';
+      const newRole = targetRole === 'VIP' ? 'User' : 'VIP';
+      await targetRef.update({ role: newRole });
+      return NextResponse.json({ message: `User ${targetData.username} role changed to ${newRole}` });
+    }
+
+    if (action === 'TOGGLE_MOD') {
+      const newRole = targetRole === 'Mod' ? 'User' : 'Mod';
       await targetRef.update({ role: newRole });
       return NextResponse.json({ message: `User ${targetData.username} role changed to ${newRole}` });
     }

@@ -34,6 +34,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [myRole, setMyRole] = useState("User");
 
   useEffect(() => {
     const token = localStorage.getItem("ryoiki_token");
@@ -48,6 +49,12 @@ export default function AdminDashboard() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("ryoiki_token");
+      const uuid = localStorage.getItem("ryoiki_uuid");
+      
+      const profileRes = await fetch(`/api/profile/${uuid}`);
+      const profileData = await profileRes.json();
+      setMyRole(profileData.role || "User");
+
       const res = await fetch("/api/admin/users", {
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -197,12 +204,23 @@ export default function AdminDashboard() {
                           <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded-md border border-emerald-500/30 flex items-center gap-1"><ShieldCheck size={12}/> Active</span>
                         )}
                         {user.role === 'Founder' && <span className="text-yellow-400 text-xs font-bold flex items-center gap-1 mt-1"><Star size={12}/> Founder</span>}
+                        {user.role === 'Mod' && <span className="text-blue-400 text-xs font-bold flex items-center gap-1 mt-1"><ShieldCheck size={12}/> Moderator</span>}
                         {user.role === 'VIP' && <span className="text-purple-400 text-xs font-bold flex items-center gap-1 mt-1"><Star size={12}/> VIP</span>}
                       </div>
                     </td>
                     <td className="p-4 text-gray-500 text-sm">{formatDate(user.createdAt)}</td>
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                        {myRole === 'Founder' && user.role !== 'Founder' && (
+                          <button 
+                            disabled={actionLoading === user.uuid}
+                            onClick={() => handleAction(user.uuid, 'TOGGLE_MOD')}
+                            title="Toggle Moderator"
+                            className="p-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                          >
+                            <ShieldCheck size={16} />
+                          </button>
+                        )}
                         {user.role !== 'Founder' && (
                           <>
                             <button 
@@ -221,15 +239,17 @@ export default function AdminDashboard() {
                             >
                               <Ban size={16} />
                             </button>
-                            <button 
-                              disabled={actionLoading === user.uuid}
-                              onClick={() => handleAction(user.uuid, 'DELETE')}
-                              title="Delete Account"
-                              className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
-                            >
-                              <Trash2 size={16} />
-                            </button>
                           </>
+                        )}
+                        {myRole === 'Founder' && user.role !== 'Founder' && (
+                          <button 
+                            disabled={actionLoading === user.uuid}
+                            onClick={() => handleAction(user.uuid, 'DELETE')}
+                            title="Delete Account"
+                            className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         )}
                       </div>
                     </td>

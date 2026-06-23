@@ -13,9 +13,12 @@ export async function GET(req: Request) {
     const decoded = jwt.verify(token, JWT_SECRET) as { uuid: string };
     const uuid = decoded.uuid;
 
-    // Verify Admin Email
+    // Verify Admin/Mod Access
     const callerDoc = await db.collection('users').doc(uuid).get();
-    if (!callerDoc.exists || callerDoc.data()!.email !== 'chiragrathoreyu@gmail.com') {
+    if (!callerDoc.exists) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    
+    const callerRole = callerDoc.data()!.role;
+    if (callerRole !== 'Founder' && callerRole !== 'Mod') {
       return NextResponse.json({ error: 'Forbidden. Admin access required.' }, { status: 403 });
     }
 
