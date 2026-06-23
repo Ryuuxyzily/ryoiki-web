@@ -18,20 +18,17 @@ export async function POST(req: Request) {
     if (!file) return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileName = `skins/${uuid}.png`;
-    const fileRef = bucket.file(fileName);
+    const base64Data = buffer.toString('base64');
+    
+    // Construct the URL to our new self-hosted skin endpoint
+    const appUrl = req.headers.get('origin') || 'https://ryoiki-web.vercel.app';
+    const skinUrl = `${appUrl}/api/profile/${uuid}/skin.png?t=${Date.now()}`;
 
-    // Upload to Firebase Storage
-    await fileRef.save(buffer, {
-      metadata: { contentType: 'image/png' },
-      public: true // Make it publicly readable
+    // Update Firestore with BOTH the raw base64 data and the URL
+    await db.collection('users').doc(uuid).update({ 
+      skin_url: skinUrl,
+      skin_data: base64Data
     });
-
-    // Get public URL
-    const skinUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}?t=${Date.now()}`;
-
-    // Update Firestore
-    await db.collection('users').doc(uuid).update({ skin_url: skinUrl });
 
     return NextResponse.json({ message: 'Skin updated successfully', skinUrl });
   } catch (error: any) {
