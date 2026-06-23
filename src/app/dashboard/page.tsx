@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Upload, Edit3, Save, X, Calendar, User, Search, Shield, Users, Lock, Trash2, MessageSquare } from "lucide-react";
+import { LogOut, Upload, Edit3, Save, X, Calendar, User, Search, Shield, Users, Lock, Trash2, MessageSquare, ShieldAlert, Star } from "lucide-react";
 
 const SkinHead = ({ skinUrl }: { skinUrl: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -233,6 +233,15 @@ export default function Dashboard() {
         >
           <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Ryoiki Dashboard</h1>
           <div className="flex gap-3">
+            {profile?.email === 'chiragrathoreyu@gmail.com' && (
+              <button 
+                onClick={() => router.push('/admin')} 
+                className="flex items-center gap-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 hover:text-red-300 border border-red-500/30 px-4 py-2 rounded-xl transition-all font-medium"
+              >
+                <ShieldAlert size={18} />
+                Admin Panel
+              </button>
+            )}
             <a 
               href="https://discord.gg/qb2C7gRACu" 
               target="_blank" 
@@ -373,8 +382,15 @@ export default function Dashboard() {
                   <div key={user.uuid} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-6 hover:bg-white/10 transition-colors">
                     <SkinHead skinUrl={user.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"} />
                     <div className="text-center">
-                      <p className="font-bold text-lg">{user.username}</p>
-                      <p className="text-xs text-gray-500 mt-1">Joined {formatDate(user.createdAt)}</p>
+                      <p className="font-bold text-lg flex items-center justify-center gap-2">
+                        {user.username}
+                      </p>
+                      <div className="flex flex-col items-center gap-1 mt-1">
+                        {user.role === 'Founder' && <span className="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-xs px-2 py-0.5 rounded flex items-center gap-1"><Star size={10}/> Founder</span>}
+                        {user.role === 'VIP' && <span className="bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs px-2 py-0.5 rounded flex items-center gap-1"><Star size={10}/> VIP</span>}
+                        {user.isBanned && <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2 py-0.5 rounded">Banned</span>}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">Joined {formatDate(user.createdAt)}</p>
                     </div>
                   </div>
                 ))}

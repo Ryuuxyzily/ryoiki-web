@@ -26,7 +26,9 @@ export async function GET(req: Request) {
           username: data.username,
           skin_url: data.skin_url,
           cosmetics: JSON.parse(data.cosmetics || '[]'),
-          createdAt: data.createdAt
+          createdAt: data.createdAt,
+          role: data.role || 'User',
+          isBanned: data.isBanned || false
         });
       }
     });

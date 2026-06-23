@@ -32,14 +32,22 @@ export async function POST(req: Request) {
       userSnapshot = await usersRef.where('username', '==', identifier).limit(1).get();
     }
 
-    if (userSnapshot.empty) return NextResponse.json({ error: 'Invalid credentials' }, { status: 400 });
+    if (userSnapshot.empty) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    }
 
-    const user = userSnapshot.docs[0].data();
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return NextResponse.json({ error: 'Invalid credentials' }, { status: 400 });
+    const userDoc = userSnapshot.docs[0];
+    const data = userDoc.data()!;
 
-    const token = jwt.sign({ uuid: user.uuid, username: user.username }, JWT_SECRET, { expiresIn: '30d' });
-    return NextResponse.json({ message: 'Login successful', token, uuid: user.uuid, username: user.username });
+    if (data.isBanned) {
+      return NextResponse.json({ error: 'This account has been permanently banned.' }, { status: 403 });
+    }
+
+    const isMatch = await bcrypt.compare(password, data.password);
+    if (!isMatch) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+
+    const token = jwt.sign({ uuid: data.uuid, username: data.username }, JWT_SECRET, { expiresIn: '30d' });
+    return NextResponse.json({ message: 'Login successful', token, uuid: data.uuid, username: data.username });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
