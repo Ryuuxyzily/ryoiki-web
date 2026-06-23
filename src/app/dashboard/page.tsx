@@ -5,6 +5,33 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogOut, Upload, Edit3, Save, X, Calendar, User } from "lucide-react";
 
+const SkinHead = ({ skinUrl }: { skinUrl: string }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = skinUrl;
+    img.onload = () => {
+      // Clear canvas
+      ctx.clearRect(0, 0, 128, 128);
+      // Disable smoothing for pixelated look
+      ctx.imageSmoothingEnabled = false;
+      // Draw Base Head (x:8, y:8, w:8, h:8 on the skin file)
+      ctx.drawImage(img, 8, 8, 8, 8, 0, 0, 128, 128);
+      // Draw Head Overlay (x:40, y:8, w:8, h:8 on the skin file)
+      ctx.drawImage(img, 40, 8, 8, 8, 0, 0, 128, 128);
+    };
+  }, [skinUrl]);
+
+  return <canvas ref={canvasRef} width={128} height={128} className="rounded-xl drop-shadow-2xl border-2 border-white/10" />;
+};
+
 export default function Dashboard() {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
@@ -155,12 +182,7 @@ export default function Dashboard() {
 
             <div className="relative z-10 w-full flex flex-col items-center">
               <div className="h-[250px] w-full flex items-center justify-center p-4">
-                <img 
-                  src={profile.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"} 
-                  alt="Minecraft Skin"
-                  className="max-h-full max-w-full object-contain drop-shadow-2xl rounded-lg bg-black/20 p-2"
-                  style={{ imageRendering: "pixelated" }}
-                />
+                <SkinHead skinUrl={profile.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"} />
               </div>
             </div>
 

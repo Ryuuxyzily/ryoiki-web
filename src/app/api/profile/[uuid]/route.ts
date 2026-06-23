@@ -12,7 +12,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ uuid: st
     return NextResponse.json({
       username: data.username,
       skin_url: data.skin_url,
-      cosmetics: JSON.parse(data.cosmetics)
+      cosmetics: JSON.parse(data.cosmetics),
+      email: data.email,
+      createdAt: data.createdAt
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
