@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, User, Lock, ArrowRight, ShieldCheck, Gamepad2 } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export default function Home() {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,12 +12,18 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      setError("Please complete the captcha.");
+      return;
+    }
+    
     setError("");
     setMsg("");
     setIsLoading(true);
@@ -26,7 +33,7 @@ export default function Home() {
         const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ identifier: email, password }),
+          body: JSON.stringify({ identifier: email, password, turnstileToken }),
         });
         const data = await res.json();
         if (data.error) throw new Error(data.error);
@@ -37,7 +44,7 @@ export default function Home() {
         const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, username, password }),
+          body: JSON.stringify({ email, username, password, turnstileToken }),
         });
         const data = await res.json();
         if (data.error) throw new Error(data.error);
@@ -227,6 +234,14 @@ export default function Home() {
                   />
                 </div>
 
+                <div className="flex justify-center mt-2">
+                  <Turnstile 
+                    siteKey="0x4AAAAAADpuwrlqKdeClsMc" 
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    options={{ theme: 'dark' }}
+                  />
+                </div>
+
                 <button 
                   type="submit" 
                   disabled={isLoading}
@@ -248,15 +263,13 @@ export default function Home() {
                   setError("");
                   setMsg("");
                 }} 
-                className="text-sm text-gray-500 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors text-sm font-medium"
               >
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
-                <span className="text-indigo-400 hover:text-indigo-300 font-medium">
-                  {isLogin ? "Register" : "Sign in"}
-                </span>
+                {isLogin ? "Don't have an account? Register" : "Already have an account? Sign In"}
               </button>
             </div>
           )}
+
         </div>
       </motion.div>
     </main>

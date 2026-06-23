@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import { isRateLimited } from '@/lib/rateLimit';
 import disposableDomains from 'disposable-email-domains';
+import { verifyTurnstileToken } from '@/lib/turnstile';
 
 export async function POST(req: Request) {
   try {
@@ -14,9 +15,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
 
-    const { email, username, password } = await req.json();
-    if (!email || !username || !password) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    const { email, username, password, turnstileToken } = await req.json();
+    if (!email || !username || !password || !turnstileToken) {
+      return NextResponse.json({ error: 'Missing fields or captcha' }, { status: 400 });
+    }
+
+    const isCaptchaValid = await verifyTurnstileToken(turnstileToken);
+    if (!isCaptchaValid) {
+      return NextResponse.json({ error: 'Invalid captcha. Are you a robot?' }, { status: 403 });
     }
 
     // Temp-Mail Checker

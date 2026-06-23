@@ -3,6 +3,7 @@ import { db } from '@/lib/firebaseAdmin';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { isRateLimited } from '@/lib/rateLimit';
+import { verifyTurnstileToken } from '@/lib/turnstile';
 
 const JWT_SECRET = 'ryoiki-super-secret-key-123!';
 
@@ -15,8 +16,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
 
-    const { identifier, password } = await req.json();
-    if (!identifier || !password) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    const { identifier, password, turnstileToken } = await req.json();
+    if (!identifier || !password || !turnstileToken) {
+      return NextResponse.json({ error: 'Missing fields or captcha' }, { status: 400 });
+    }
+
+    const isCaptchaValid = await verifyTurnstileToken(turnstileToken);
+    if (!isCaptchaValid) {
+      return NextResponse.json({ error: 'Invalid captcha. Are you a robot?' }, { status: 403 });
+    }
 
     const usersRef = db.collection('users');
     let userSnapshot = await usersRef.where('email', '==', identifier).limit(1).get();
