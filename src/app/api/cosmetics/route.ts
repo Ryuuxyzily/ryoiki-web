@@ -6,7 +6,7 @@ export async function GET() {
     const snapshot = await db.collection('users').get();
     const result: Record<string, string[]> = {};
     
-    snapshot.forEach(doc => {
+    snapshot.forEach((doc: any) => {
       const data = doc.data();
       const cosmetics = JSON.parse(data.cosmetics);
       if (cosmetics.length > 0) {
