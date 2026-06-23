@@ -18,6 +18,8 @@
     "nodemailer": "^9.0.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-skinview3d": "^5.1.0",
+    "skinview3d": "^3.4.2",
     "uuid": "^14.0.1"
   },
   "devDependencies": {

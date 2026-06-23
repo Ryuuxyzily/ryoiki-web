@@ -25,7 +25,8 @@ export async function POST(req: Request) {
       email: email,
       password: data.password,
       skin_url: '',
-      cosmetics: '[]'
+      cosmetics: '[]',
+      createdAt: Date.now()
     });
 
     await db.collection('otps').doc(email).delete();
