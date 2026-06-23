@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     const usersSnapshot = await db.collection('users').limit(1000).get();
     const users: any[] = [];
     
-    usersSnapshot.forEach(doc => {
+    usersSnapshot.forEach((doc: any) => {
       const data = doc.data();
       users.push({
         uuid: data.uuid,
