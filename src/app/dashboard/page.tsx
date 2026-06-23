@@ -3,9 +3,12 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import Skinview3d from "react-skinview3d";
+import dynamic from "next/dynamic";
 import * as skinview3d from "skinview3d";
 import { LogOut, Upload, Edit3, Save, X, Calendar, User } from "lucide-react";
+
+// Dynamically import Skinview3d to prevent Next.js SSR errors since it requires the browser DOM
+const Skinview3d = dynamic(() => import("react-skinview3d"), { ssr: false });
 
 export default function Dashboard() {
   const router = useRouter();
