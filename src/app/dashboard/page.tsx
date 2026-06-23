@@ -162,7 +162,7 @@ export default function Dashboard() {
                     skinUrl={profile.skin_url}
                     height={300}
                     width={200}
-                    onReady={(viewer) => {
+                    onReady={({ viewer }) => {
                       viewer.animation = new skinview3d.IdleAnimation();
                       viewer.autoRotate = true;
                       viewer.autoRotateSpeed = 0.5;
