@@ -164,8 +164,6 @@ export default function Dashboard() {
                   height={300}
                   width={200}
                   onReady={({ viewer }) => {
-                    const { IdleAnimation } = require("skinview3d");
-                    viewer.animation = new IdleAnimation();
                     viewer.autoRotate = true;
                     viewer.autoRotateSpeed = 0.5;
                   }}
