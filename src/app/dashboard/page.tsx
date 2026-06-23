@@ -370,10 +370,8 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {searchResults.map(user => (
-                  <div key={user.uuid} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-4 hover:bg-white/10 transition-colors">
-                    <div className="w-24 h-24">
-                      <SkinHead skinUrl={user.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"} />
-                    </div>
+                  <div key={user.uuid} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-6 hover:bg-white/10 transition-colors">
+                    <SkinHead skinUrl={user.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"} />
                     <div className="text-center">
                       <p className="font-bold text-lg">{user.username}</p>
                       <p className="text-xs text-gray-500 mt-1">Joined {formatDate(user.createdAt)}</p>
