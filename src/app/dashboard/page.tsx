@@ -64,8 +64,8 @@ export default function Dashboard() {
       if (!res.ok) throw new Error(data.error);
 
       setProfile({ ...profile, skin_url: data.skinUrl });
-    } catch (err) {
-      alert("Failed to upload skin.");
+    } catch (err: any) {
+      alert(`Failed to upload skin: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -159,25 +159,18 @@ export default function Dashboard() {
             </div>
 
             <div className="relative z-10 w-full flex flex-col items-center">
-              {profile.skin_url ? (
-                <div className="h-[300px] w-full flex items-center justify-center">
-                  <Skinview3d
-                    skinUrl={profile.skin_url}
-                    height={300}
-                    width={200}
-                    onReady={({ viewer }) => {
-                      viewer.animation = new skinview3d.IdleAnimation();
-                      viewer.autoRotate = true;
-                      viewer.autoRotateSpeed = 0.5;
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="h-[300px] w-full flex flex-col items-center justify-center gap-4 text-gray-500 bg-white/5 rounded-2xl border border-dashed border-white/20">
-                  <User size={48} className="opacity-50" />
-                  <span>No Skin Uploaded</span>
-                </div>
-              )}
+              <div className="h-[300px] w-full flex items-center justify-center">
+                <Skinview3d
+                  skinUrl={profile.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"}
+                  height={300}
+                  width={200}
+                  onReady={({ viewer }) => {
+                    viewer.animation = new skinview3d.IdleAnimation();
+                    viewer.autoRotate = true;
+                    viewer.autoRotateSpeed = 0.5;
+                  }}
+                />
+              </div>
             </div>
 
             <input 
