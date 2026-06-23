@@ -10,8 +10,6 @@ export default function Dashboard() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
   useEffect(() => {
     const token = localStorage.getItem("ryoiki_token");
     const uuid = localStorage.getItem("ryoiki_uuid");
@@ -20,13 +18,13 @@ export default function Dashboard() {
       return;
     }
 
-    fetch(`${API_URL}/api/profile/${uuid}`)
+    fetch(`/api/profile/${uuid}`)
       .then(res => res.json())
       .then(data => {
         setProfile(data);
         setLoading(false);
       });
-  }, [router, API_URL]);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("ryoiki_token");
@@ -43,7 +41,7 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem("ryoiki_token");
-      const res = await fetch(`${API_URL}/api/profile/skin`, {
+      const res = await fetch(`/api/profile/skin`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData

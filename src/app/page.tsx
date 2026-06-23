@@ -12,40 +12,37 @@ export default function Home() {
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setMsg("");
-
+    setMsg("Processing...");
     try {
       if (isLogin) {
         // Login
-        const res = await fetch(`${API_URL}/api/auth/login`, {
+        const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ identifier: email, password }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        if (data.error) throw new Error(data.error);
         localStorage.setItem("ryoiki_token", data.token);
         localStorage.setItem("ryoiki_uuid", data.uuid);
         window.location.href = "/dashboard";
       } else {
         // Register (Step 1)
-        const res = await fetch(`${API_URL}/api/auth/register`, {
+        const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, username, password }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        if (data.error) throw new Error(data.error);
         setMsg(data.message);
         setStep("otp");
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Server error");
     }
   };
 
@@ -53,7 +50,7 @@ export default function Home() {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch(`${API_URL}/api/auth/verify`, {
+      const res = await fetch("/api/auth/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
