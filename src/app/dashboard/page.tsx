@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import * as skinview3d from "skinview3d";
 import { LogOut, Upload, Edit3, Save, X, Calendar, User } from "lucide-react";
 
 // Dynamically import Skinview3d to prevent Next.js SSR errors since it requires the browser DOM
@@ -165,7 +164,8 @@ export default function Dashboard() {
                   height={300}
                   width={200}
                   onReady={({ viewer }) => {
-                    viewer.animation = new skinview3d.IdleAnimation();
+                    const { IdleAnimation } = require("skinview3d");
+                    viewer.animation = new IdleAnimation();
                     viewer.autoRotate = true;
                     viewer.autoRotateSpeed = 0.5;
                   }}
