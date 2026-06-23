@@ -3,11 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from "next/dynamic";
 import { LogOut, Upload, Edit3, Save, X, Calendar, User } from "lucide-react";
-
-// Dynamically import Skinview3d to prevent Next.js SSR errors since it requires the browser DOM
-const Skinview3d = dynamic(() => import("react-skinview3d"), { ssr: false });
 
 export default function Dashboard() {
   const router = useRouter();
@@ -158,15 +154,12 @@ export default function Dashboard() {
             </div>
 
             <div className="relative z-10 w-full flex flex-col items-center">
-              <div className="h-[300px] w-full flex items-center justify-center">
-                <Skinview3d
-                  skinUrl={profile.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"}
-                  height={300}
-                  width={200}
-                  onReady={({ viewer }) => {
-                    viewer.autoRotate = true;
-                    viewer.autoRotateSpeed = 0.5;
-                  }}
+              <div className="h-[250px] w-full flex items-center justify-center p-4">
+                <img 
+                  src={profile.skin_url || "https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"} 
+                  alt="Minecraft Skin"
+                  className="max-h-full max-w-full object-contain drop-shadow-2xl rounded-lg bg-black/20 p-2"
+                  style={{ imageRendering: "pixelated" }}
                 />
               </div>
             </div>
