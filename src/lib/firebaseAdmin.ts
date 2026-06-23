@@ -9,6 +9,9 @@ try {
   const keyPath = path.resolve(process.cwd(), 'firebase-admin-key.json');
   if (fs.existsSync(keyPath)) {
     serviceAccount = JSON.parse(fs.readFileSync(keyPath, 'utf8'));
+  } else if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+    const jsonStr = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString('utf8');
+    serviceAccount = JSON.parse(jsonStr);
   } else if (process.env.FIREBASE_PROJECT_ID) {
     let privateKey = process.env.FIREBASE_PRIVATE_KEY || '';
     privateKey = privateKey.replace(/^"|"$/g, ''); // Remove quotes if added
