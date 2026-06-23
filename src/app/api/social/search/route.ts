@@ -19,7 +19,7 @@ export async function GET(req: Request) {
       .get();
 
     const results: any[] = [];
-    snapshot.forEach(doc => {
+    snapshot.forEach((doc: any) => {
       const data = doc.data();
       results.push({
         uuid: data.uuid,
