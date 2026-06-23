@@ -28,7 +28,7 @@ try {
 }
 
 // Only initialize if we have a service account and it hasn't been initialized yet
-if (!admin.apps.length && serviceAccount && serviceAccount.privateKey) {
+if (!admin.apps.length && serviceAccount && (serviceAccount.privateKey || serviceAccount.private_key)) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     storageBucket: `${serviceAccount.project_id || serviceAccount.projectId}.appspot.com`
