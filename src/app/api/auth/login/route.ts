@@ -17,13 +17,16 @@ export async function POST(req: Request) {
     }
 
     const { identifier, password, turnstileToken } = await req.json();
-    if (!identifier || !password || !turnstileToken) {
-      return NextResponse.json({ error: 'Missing fields or captcha' }, { status: 400 });
+    if (!identifier || !password) {
+      return NextResponse.json({ error: 'Missing email or password' }, { status: 400 });
     }
 
-    const isCaptchaValid = await verifyTurnstileToken(turnstileToken);
-    if (!isCaptchaValid) {
-      return NextResponse.json({ error: 'Invalid captcha. Are you a robot?' }, { status: 403 });
+    // Only verify captcha if provided (Web provides it, Desktop Launcher does not)
+    if (turnstileToken) {
+      const isCaptchaValid = await verifyTurnstileToken(turnstileToken);
+      if (!isCaptchaValid) {
+        return NextResponse.json({ error: 'Invalid captcha. Are you a robot?' }, { status: 403 });
+      }
     }
 
     const usersRef = db.collection('users');

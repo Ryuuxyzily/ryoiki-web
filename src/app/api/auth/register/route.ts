@@ -16,13 +16,15 @@ export async function POST(req: Request) {
     }
 
     const { email, username, password, turnstileToken } = await req.json();
-    if (!email || !username || !password || !turnstileToken) {
-      return NextResponse.json({ error: 'Missing fields or captcha' }, { status: 400 });
+    if (!email || !username || !password) {
+      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const isCaptchaValid = await verifyTurnstileToken(turnstileToken);
-    if (!isCaptchaValid) {
-      return NextResponse.json({ error: 'Invalid captcha. Are you a robot?' }, { status: 403 });
+    if (turnstileToken) {
+      const isCaptchaValid = await verifyTurnstileToken(turnstileToken);
+      if (!isCaptchaValid) {
+        return NextResponse.json({ error: 'Invalid captcha. Are you a robot?' }, { status: 403 });
+      }
     }
 
     // Temp-Mail Checker
