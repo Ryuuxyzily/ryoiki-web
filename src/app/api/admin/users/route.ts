@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     usersSnapshot.forEach((doc: any) => {
       const data = doc.data();
       users.push({
-        uuid: data.uuid,
+        uuid: data.uuid || doc.id,
         username: data.username,
         email: data.email,
         skin_url: data.skin_url,

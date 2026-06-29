@@ -1,86 +1,71 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d0d0d;
+  --background: #000000;
   --foreground: #ffffff;
-  --card-bg: #1a1a1a;
-  --accent: #2e2e2e;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --accent: rgba(255, 255, 255, 0.1);
+  --accent-hover: rgba(255, 255, 255, 0.2);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   overflow-x: hidden;
 }
 
 /* Smooth Transitions */
 * {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
-  background-color: var(--accent);
-  color: #ffffff;
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
-.card {
-  background-color: var(--card-bg);
+/* Glassmorphism Card Style */
+.glass-card {
+  background: var(--card-bg);
   border: 1px solid var(--accent);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.input-field {
-  background-color: #121212;
-  border: 1px solid var(--accent);
-  color: white;
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  width: 100%;
-  outline: none;
-}
-.input-field:focus {
-  border-color: #666;
+/* Animated Gradient Background */
+@keyframes monochromeShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.btn-primary {
-  background-color: #ffffff;
-  color: #000000;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-.btn-primary:hover {
-  background-color: #e0e0e0;
-  transform: translateY(-1px);
-}
-.btn-primary:active {
-  transform: translateY(0);
+.bg-monochrome-gradient {
+  background: linear-gradient(-45deg, #000000, #111111, #1a1a1a, #000000);
+  background-size: 400% 400%;
+  animation: monochromeShift 15s ease infinite;
 }
 
-.btn-secondary {
-  background-color: transparent;
-  color: #ffffff;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  border: 1px solid var(--accent);
-  cursor: pointer;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
-.btn-secondary:hover {
-  background-color: var(--accent);
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
