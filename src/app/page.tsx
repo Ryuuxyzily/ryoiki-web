@@ -83,17 +83,8 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-monochrome-gradient text-white">
       {/* Monochrome Background Elements */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full border border-white/5 bg-white/5 blur-[100px]" 
-        />
-        <motion.div 
-          animate={{ rotate: -360 }}
-          transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full border border-white/5 bg-white/5 blur-[120px]" 
-        />
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex justify-center items-center">
+        <div className="ambient-blob w-[800px] h-[800px]" />
       </div>
 
       <motion.div 

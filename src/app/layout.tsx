@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ryoiki Auth | Premium Minecraft Network",
@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased min-h-screen flex flex-col items-center justify-center bg-black text-white selection:bg-white/20`}>
+      <body className={`${outfit.className} antialiased min-h-screen flex flex-col items-center justify-center bg-black text-white selection:bg-purple-500/30 selection:text-purple-200`}>
         {children}
       </body>
     </html>
