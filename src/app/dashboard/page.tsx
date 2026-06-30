@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Upload, Edit3, Save, X, Calendar, User, Search, Shield, Users, Lock, Trash2, MessageSquare, ShieldAlert, Star, ShieldCheck } from "lucide-react";
+import { LogOut, Upload, Edit3, Save, X, Calendar, User, Search, Shield, Users, Lock, Trash2, MessageSquare, ShieldAlert, Star, ShieldCheck, Package } from "lucide-react";
 
 const SkinHead = ({ skinUrl }: { skinUrl: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -250,6 +250,13 @@ export default function Dashboard() {
                 Admin Panel
               </button>
             )}
+            <button 
+              onClick={() => router.push("/cosmetics")} 
+              className="flex items-center gap-2 bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-xl transition-all font-bold"
+            >
+              <Package size={18} />
+              Cosmetics
+            </button>
             <a 
               href="https://discord.gg/qb2C7gRACu" 
               target="_blank" 

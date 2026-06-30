@@ -34,6 +34,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ uuid: st
       username: data.username,
       skin_url: data.skin_url,
       cosmetics: JSON.parse(data.cosmetics || '[]'),
+      owned_cosmetics: JSON.parse(data.owned_cosmetics || '[]'),
       email: data.email,
       createdAt: createdAt,
       role: role,
