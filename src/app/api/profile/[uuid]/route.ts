@@ -1,10 +1,27 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
 
+// Helper to format uuid with dashes: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+function addDashes(uuid: string): string {
+  const s = uuid.replace(/-/g, '');
+  if (s.length !== 32) return uuid;
+  return `${s.slice(0,8)}-${s.slice(8,12)}-${s.slice(12,16)}-${s.slice(16,20)}-${s.slice(20)}`;
+}
+
 export async function GET(req: Request, { params }: { params: Promise<{ uuid: string }> }) {
   try {
     const { uuid } = await params;
-    const userDoc = await db.collection('users').doc(uuid).get();
+
+    // Try the UUID as-is first, then try with dashes added (client strips dashes)
+    let userDoc = await db.collection('users').doc(uuid).get();
+    let resolvedUuid = uuid;
+    if (!userDoc.exists) {
+      const dashedUuid = addDashes(uuid);
+      if (dashedUuid !== uuid) {
+        userDoc = await db.collection('users').doc(dashedUuid).get();
+        resolvedUuid = dashedUuid;
+      }
+    }
 
     if (!userDoc.exists) return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
@@ -27,7 +44,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ uuid: st
     }
 
     if (Object.keys(updates).length > 0) {
-      await db.collection('users').doc(uuid).update(updates);
+      await db.collection('users').doc(resolvedUuid).update(updates);
     }
 
     return NextResponse.json({
