@@ -141,7 +141,7 @@ export default function CosmeticsStore() {
                 
                 <div className="w-full h-48 bg-white/5 rounded-2xl mb-4 flex items-center justify-center p-2 border border-white/5 group-hover:border-white/20 transition-all z-10 overflow-hidden relative">
                   <img 
-                    src={`/capes/${activeTab.toLowerCase()}/${capeId}.png`} 
+                    src={`/capes/${activeTab.toLowerCase()}/${capeId}-sample.png`} 
                     alt={capeId} 
                     className="h-full object-cover" 
                     style={{ imageRendering: "pixelated" }} 
@@ -195,7 +195,7 @@ export default function CosmeticsStore() {
                 return (
                   <div key={capeId} className="flex-shrink-0 w-32 bg-white/5 border border-white/10 p-3 rounded-2xl flex flex-col items-center">
                     <img 
-                      src={`/capes/${folder}/${capeId}.png`} 
+                    src={`/capes/${folder}/${capeId}-sample.png`}
                       alt={capeId} 
                       className="w-full h-24 object-cover rounded-xl mb-3" 
                       style={{ imageRendering: "pixelated" }} 
