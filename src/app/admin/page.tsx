@@ -108,10 +108,12 @@ export default function AdminDashboard() {
     }
   };
 
-  const filteredUsers = users.filter(user => 
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = users.filter(user => {
+    const uname = user.username || "";
+    const uemail = user.email || "";
+    return uname.toLowerCase().includes(searchQuery.toLowerCase()) || 
+           uemail.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const formatDate = (timestamp?: number) => {
     if (!timestamp) return "Unknown";
