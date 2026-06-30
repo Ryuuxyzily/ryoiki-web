@@ -69,3 +69,43 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Ambient Glow */
+@keyframes ambientGlow {
+  0% { filter: blur(80px) opacity(0.3); transform: rotate(0deg) scale(1); }
+  50% { filter: blur(100px) opacity(0.5); transform: rotate(180deg) scale(1.1); }
+  100% { filter: blur(80px) opacity(0.3); transform: rotate(360deg) scale(1); }
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+  animation: ambientGlow 20s infinite alternate linear;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Hover glow for cards */
+.glass-card {
+  background: var(--card-bg);
+  border: 1px solid var(--accent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-card:hover {
+  border-color: rgba(255,255,255,0.4);
+  box-shadow: 0 10px 40px -10px rgba(255,255,255,0.15);
+  transform: translateY(-5px) scale(1.02);
+}
+
+.cape-img-hover {
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0));
+  transition: filter 0.5s ease;
+}
+
+.glass-card:hover .cape-img-hover {
+  filter: drop-shadow(0 10px 20px rgba(255,255,255,0.2));
+}

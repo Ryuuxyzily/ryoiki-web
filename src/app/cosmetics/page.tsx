@@ -119,8 +119,8 @@ export default function CosmeticsStore() {
   return (
     <main className="min-h-screen w-full flex flex-col items-center p-4 md:p-8 relative overflow-hidden bg-monochrome-gradient text-white">
       {/* Background Glow */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[30%] w-[40%] h-[40%] rounded-full bg-white/5 blur-[120px]" />
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex justify-center items-center">
+        <div className="ambient-blob w-[800px] h-[800px]" />
       </div>
 
       <div className="w-full max-w-6xl relative z-10">
@@ -186,7 +186,7 @@ export default function CosmeticsStore() {
                   <img 
                     src={`/capes/${activeTab.toLowerCase()}/${capeId}-sample.png`} 
                     alt={capeId} 
-                    className="h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
+                    className="h-full object-cover transform group-hover:scale-105 transition-transform duration-500 cape-img-hover" 
                     style={{ imageRendering: "pixelated" }} 
                   />
                 </div>
