@@ -28,6 +28,8 @@ export async function GET(req: Request) {
     
     usersSnapshot.forEach((doc: any) => {
       const data = doc.data();
+      if (!data.email) return; // Skip cosmetic-only ghost profiles
+      
       users.push({
         uuid: data.uuid || doc.id,
         username: data.username,
