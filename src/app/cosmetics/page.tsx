@@ -52,7 +52,7 @@ export default function CosmeticsStore() {
         canvas: canvasRef.current,
         width: 300,
         height: 400,
-        skin: userSkinUrl || "/blank-skin.png"
+        skin: userSkinUrl || "/steve-skin.png"
       });
 
       const folder = previewCape.startsWith("free") ? "free" : "premium";
