@@ -10,6 +10,7 @@ export default function CosmeticsStore() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"FREE" | "PREMIUM">("FREE");
   const [ownedCosmetics, setOwnedCosmetics] = useState<string[]>([]);
+  const [userSkinUrl, setUserSkinUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState<string | null>(null);
   
@@ -33,6 +34,7 @@ export default function CosmeticsStore() {
         if (res.ok) {
           const data = await res.json();
           setOwnedCosmetics(data.owned_cosmetics || []);
+          setUserSkinUrl(data.skin_url || null);
         }
       } catch (err) {
         console.error("Failed to load profile", err);
@@ -50,7 +52,7 @@ export default function CosmeticsStore() {
         canvas: canvasRef.current,
         width: 300,
         height: 400,
-        skin: "/blank-skin.png"
+        skin: userSkinUrl || "/blank-skin.png"
       });
 
       const folder = previewCape.startsWith("free") ? "free" : "premium";
